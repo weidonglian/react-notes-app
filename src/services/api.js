@@ -9,4 +9,4 @@ const createApiClient = () => {
     })
 }
 
-export const apiClient = createApiClient()
+export default apiClient = createApiClient()

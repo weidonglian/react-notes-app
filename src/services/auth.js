@@ -6,7 +6,7 @@ const credentialsKey = 'credentials'
  * Provides a base for authentication workflow.
  * The LoginCredentials interface as well as login/logout methods should be replaced with proper implementation.
  */
-export class AuthService {
+class AuthService {
     constructor() {
         this._credentials = undefined
         const savedCredentials = sessionStorage.getItem(credentialsKey) || localStorage.getItem(credentialsKey);
@@ -69,5 +69,5 @@ export class AuthService {
     }
 }
 
-export const auth = new AuthService()
+export default auth = new AuthService()
 
