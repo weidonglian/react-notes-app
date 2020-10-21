@@ -108,7 +108,7 @@ export default function LoginForm() {
       history.push('/')
     }).catch(error => {
       helpers.setSubmitting(false)
-      if (error.response.data.message)
+      if (error.response.data?.message)
         dispatch({
           type: actions.SHOW_MESSAGE,
           payload: {

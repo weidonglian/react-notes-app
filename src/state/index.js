@@ -43,7 +43,7 @@ function appStateReducer(state = appState, action) {
   }
 }
 
-const appStateContext = React.createContext(undefined)
+const appStateContext = React.createContext([])
 
 export const useAppState = () => React.useContext(appStateContext)
 
