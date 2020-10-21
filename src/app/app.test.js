@@ -1,6 +1,6 @@
 import React from 'react'
 import { notesActions } from '../../actions/notes'
-import { App } from './app'
+import App from './app'
 import { AppState, initialAppState } from '../../reducers'
 import { renderWithState } from '../../utils/test-utils'
 

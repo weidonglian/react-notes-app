@@ -8,7 +8,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import React from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
 import { useHistory } from 'react-router'
-import { auth } from '../services/auth'
+import auth from '../services/auth'
 
 const useStyles = makeStyles(theme =>
     createStyles({
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme =>
     })
 )
 
-export default AppHeader = () => {
+export default function AppHeader() {
     const classes = useStyles()
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl)

@@ -46,7 +46,7 @@ const variantIcon = {
   info: InfoIcon,
 }
 
-export default AppMessage = props => {
+export default function AppMessage() {
   const classes = useStyles()
   const [state, dispatch] = useAppState()
   const { message, variant, visible } = state.appMessage
