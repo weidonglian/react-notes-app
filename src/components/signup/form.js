@@ -10,10 +10,10 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import { Link as RouterLink, useHistory } from 'react-router-dom'
-import { Copyright } from '../App/Copyright'
+import Copyright from '../../components/login/copyright'
 import * as yup from 'yup'
 import { TextField } from 'formik-material-ui'
-import { FormikProps, Form, Field, Formik, FormikHelpers } from 'formik'
+import { Form, Field, Formik } from 'formik'
 import auth from '../../services/auth'
 import { actions, useAppState, variants } from '../../state'
 
@@ -114,7 +114,7 @@ const FormView = props => {
 
 export default function SignupForm() {
   const history = useHistory()
-  const [_, dispatch] = useAppState()
+  const [, dispatch] = useAppState()
   const initialValues = {
     username: '',
     password: '',

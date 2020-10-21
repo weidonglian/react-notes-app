@@ -1,5 +1,4 @@
 import React from 'react'
-import { messageState } from './message'
 
 export const actions = {
   SHOW_MESSAGE: 'show_message',

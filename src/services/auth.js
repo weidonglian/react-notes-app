@@ -1,4 +1,4 @@
-import { apiClient } from './request';
+import apiClient from './api';
 
 const credentialsKey = 'credentials'
 

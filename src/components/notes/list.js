@@ -1,7 +1,7 @@
-import { makeStyles, Theme, Typography } from '@material-ui/core'
+import { makeStyles, Typography } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
-import React, { useEffect } from 'react'
+import React from 'react'
 import TodosListView from '../todos/list-view'
 import { useMutation, useQuery } from 'react-query'
 import { getNotes } from '../../services/notes'
@@ -48,7 +48,7 @@ function NotesListView({ notes, toggleTodo, addTodo }) {
 }
 
 export default function NotesList() {
-  const { statusNotes, notes } = useQuery("notes", getNotes)
+  const { data: notes } = useQuery("notes", getNotes)
   const [mutAddTodo] = useMutation(addTodo)
   const [mutToggleTodo] = useMutation(toggleTodo)
   return <NotesListView notes={notes} addTodo={mutAddTodo} toggleTodo={mutToggleTodo()} />

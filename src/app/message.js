@@ -10,8 +10,7 @@ import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import WarningIcon from '@material-ui/icons/Warning'
 import { makeStyles } from '@material-ui/core/styles'
-import { useAppState } from '../state'
-import { variants } from '../state/message'
+import { actions, useAppState } from '../state'
 
 const useStyles = makeStyles(theme => ({
   success: {
@@ -53,11 +52,8 @@ export default function AppMessage() {
   const Icon = variantIcon[variant]
   const handleClose = () => {
     dispatch({
-      appMessage: {
-        message: '',
-        variant: variants.SUCCESS,
-        visible: false
-      }
+      type: actions.HIDE_MESSAGE,
+      payload: {},
     })
   }
 

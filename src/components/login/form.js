@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Grid, makeStyles, Link } from '@material-ui/core'
 import { TextField, CheckboxWithLabel } from 'formik-material-ui'
-import { Form, Field, FormikProps, Formik, FormikHelpers } from 'formik'
+import { Form, Field, Formik } from 'formik'
 import * as yup from 'yup'
 import auth from '../../services/auth'
 import { Link as RouterLink, useHistory } from 'react-router-dom'
@@ -95,7 +95,7 @@ export default function LoginForm() {
     password: '',
     remember: true
   }
-  const [_, dispatch] = useAppState()
+  const [, dispatch] = useAppState()
   const handleSubmit = (values, helpers) => {
     auth.login(values).then(() => {
       dispatch({

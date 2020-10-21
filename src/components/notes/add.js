@@ -6,7 +6,6 @@ import {
   DialogTitle,
   Fab,
   TextField,
-  withStyles,
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import React, { useState } from 'react'
