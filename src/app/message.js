@@ -10,7 +10,7 @@ import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import WarningIcon from '@material-ui/icons/Warning'
 import { makeStyles } from '@material-ui/core/styles'
-import { actions, useAppState } from '../state'
+import { actions, useAppState } from '../state/local'
 
 const useStyles = makeStyles(theme => ({
   success: {

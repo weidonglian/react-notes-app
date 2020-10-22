@@ -15,7 +15,7 @@ import * as yup from 'yup'
 import { TextField } from 'formik-material-ui'
 import { Form, Field, Formik } from 'formik'
 import auth from '../../services/auth'
-import { actions, useAppState, variants } from '../../state'
+import { actions, useAppState, variants } from '../../state/local'
 
 const formValuesSchema = yup.object({
   username: yup

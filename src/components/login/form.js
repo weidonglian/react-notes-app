@@ -5,7 +5,7 @@ import { Form, Field, Formik } from 'formik'
 import * as yup from 'yup'
 import auth from '../../services/auth'
 import { Link as RouterLink, useHistory } from 'react-router-dom'
-import { actions, useAppState, variants } from '../../state'
+import { actions, useAppState, variants } from '../../state/local'
 
 const formValuesSchema = yup.object({
   username: yup

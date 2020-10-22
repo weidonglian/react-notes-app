@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom'
 import AppRouter from './router'
 import AppHeader from './header'
 import AppMessage from './message'
-import AppStateProvider from '../state'
+import AppStateProvider from '../state/local'
 import { QueryCache, ReactQueryCacheProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query-devtools'
 

@@ -1,4 +1,4 @@
-import apiClient from './api'
+import api, {apiClient} from './api'
 
 const credentialsKey = 'credentials'
 
@@ -15,19 +15,12 @@ class AuthService {
         }
     }
 
-    signup(user) {
-        return apiClient.post('/users/new', {
-            username: user.username,
-            password: user.password,
-        })
+    async signup(user) {
+        return api.signup(user)
     }
 
     async login(user) {
-        const { data } = await apiClient.post('/session', {
-            username: user.username,
-            password: user.password,
-        })
-        const { token } = data
+        const { token } = await api.login(user)
         this.setCredentials({
             username: user.username,
             access_token: token,
@@ -38,11 +31,10 @@ class AuthService {
     async logout() {
         this.setCredentials()
         if (this.isAuthenticated()) {
-            try {
-                await apiClient.delete('/session')
-            } catch (e) {
-                console.log("logout session with error:", e)
-            }
+            await api.logout().catch(err => {
+                console.log('logout session with error:', err)
+            })
+
         }
     }
 
@@ -74,5 +66,6 @@ class AuthService {
 }
 
 const auth = new AuthService()
+
 export default auth
 

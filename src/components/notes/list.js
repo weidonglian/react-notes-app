@@ -3,11 +3,8 @@ import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import React from 'react'
 import TodosListView from '../todos/list-view'
-import { useMutation, useQuery, useQueryCache } from 'react-query'
-import notesAPI from '../../services/notes'
-import todosAPI from '../../services/todos'
 import TodosAddView from '../todos/add-view'
-import produce from 'immer'
+import { useMutationAddTodo, useMutationToggleTodo, useQueryNotes } from '../../state/remote'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -29,35 +26,9 @@ const useStyles = makeStyles(theme => ({
 export default function NotesList() {
     const classes = useStyles()
     const [editingNoteId, setEditingNoteId] = React.useState(-1)
-    const notes = useQuery('notes', notesAPI.getNotes)
-    const queryCache = useQueryCache()
-    const [addTodo] = useMutation(todosAPI.addTodo, {
-        onSuccess: data => {
-            const oldNotes = queryCache.getQueryData('notes')
-            const newNotes = produce(oldNotes, n => {
-                const noteIndex = n.findIndex(note => note.id === data.noteId)
-                if (noteIndex > -1) {
-                    n[noteIndex].todos.push(data)
-                }
-            })
-            queryCache.setQueryData('notes', newNotes)
-        },
-    })
-    const [toggleTodo] = useMutation(todosAPI.toggleTodo, {
-        onSuccess: data => {
-            const oldNotes = queryCache.getQueryData('notes')
-            const newNotes = produce(oldNotes, n => {
-                const noteIndex = n.findIndex(note => note.id === data.noteId)
-                if (noteIndex > -1) {
-                    const todoIndex = n[noteIndex].todos.findIndex(todo => todo.id === data.id)
-                    if (todoIndex > -1) {
-                        n[noteIndex].todos[todoIndex].done = data.done
-                    }
-                }
-            })
-            queryCache.setQueryData('notes', newNotes)
-        },
-    })
+    const notes = useQueryNotes()
+    const [addTodo] = useMutationAddTodo()
+    const [toggleTodo] = useMutationToggleTodo()
 
     if (notes.isLoading) {
         return <span>Loading...</span>
