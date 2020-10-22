@@ -1,4 +1,4 @@
-import apiClient from './api';
+import apiClient from './api'
 
 const credentialsKey = 'credentials'
 
@@ -9,36 +9,40 @@ const credentialsKey = 'credentials'
 class AuthService {
     constructor() {
         this._credentials = undefined
-        const savedCredentials = sessionStorage.getItem(credentialsKey) || localStorage.getItem(credentialsKey);
+        const savedCredentials = sessionStorage.getItem(credentialsKey) || localStorage.getItem(credentialsKey)
         if (savedCredentials) {
-            this.setCredentials(JSON.parse(savedCredentials), true);
+            this.setCredentials(JSON.parse(savedCredentials), true)
         }
     }
 
     signup(user) {
-        return apiClient.post('/auth/signup', {
+        return apiClient.post('/users/new', {
             username: user.username,
-            password: user.password
+            password: user.password,
         })
     }
 
     async login(user) {
-        const respLogin = await apiClient.post('/auth/login', {
+        const { data } = await apiClient.post('/session', {
             username: user.username,
-            password: user.password
+            password: user.password,
         })
-        const { token } = respLogin.data
+        const { token } = data
         this.setCredentials({
             username: user.username,
             access_token: token,
-            refresh_token: token
+            refresh_token: token,
         }, user.remember)
     }
 
-    logout() {
-        this.setCredentials();
+    async logout() {
+        this.setCredentials()
         if (this.isAuthenticated()) {
-            // TODO request remote server /logout
+            try {
+                await apiClient.delete('/session')
+            } catch (e) {
+                console.log("logout session with error:", e)
+            }
         }
     }
 
@@ -51,11 +55,11 @@ class AuthService {
     }
 
     get credentials() {
-        return this._credentials;
+        return this._credentials
     }
 
     setCredentials(credentials, remember) {
-        this._credentials = credentials || null;
+        this._credentials = credentials || null
 
         if (credentials) {
             const storage = remember ? localStorage : sessionStorage

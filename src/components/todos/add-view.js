@@ -1,4 +1,4 @@
-import { createStyles, InputAdornment, InputBase, Theme, WithStyles, withStyles } from '@material-ui/core'
+import { InputAdornment, InputBase } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
@@ -27,7 +27,7 @@ export default function TodosAddView({addTodo}) {
 
   const handleAdd = () => {
     if (name) {
-      addTodo(name)
+      addTodo({name})
       setName('')
     }
   }

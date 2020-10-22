@@ -1,12 +1,15 @@
 import apiClient from './api'
 
-export const getNotes = async () => {
-  const { data } = await apiClient.get('/notes')
-  return data
+const getNotes = async () => {
+    const { data } = await apiClient.get('/notes')
+    return data
 }
 
-export const addNote = async ({ name }) => {
-  return apiClient.post('/notes', {
-    name,
-  })
+const addNote = async ({ name }) => {
+    const { data } = await apiClient.post('/notes', {
+        name,
+    })
+    return data
 }
+
+export default { getNotes, addNote }
