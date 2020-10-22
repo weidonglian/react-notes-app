@@ -5,7 +5,8 @@
   "scripts": {
     "start": "rescripts start",
     "build": "rescripts build",
-    "test": "rescripts test"
+    "test": "rescripts test",
+    "start:prod": "rescripts build && serve -s build"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",

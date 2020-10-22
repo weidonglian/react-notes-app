@@ -1,6 +1,7 @@
 import axios from 'axios'
+import config from '../app/config'
 
-const baseURL = 'http://localhost:4000'
+const baseURL = config.apiURL
 
 const createApiClient = () => {
     return axios.create({
