@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, HashRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import AppRouter from './router'
 import AppHeader from './header'
 import AppMessage from './message'
@@ -11,18 +11,16 @@ const queryCache = new QueryCache()
 
 export default function App() {
     return (
-        <HashRouter basename='/'>
-            <BrowserRouter>
-                <ReactQueryCacheProvider queryCache={queryCache}>
-                    <AppStateProvider>
-                        <AppHeader />
-                        <AppMessage />
-                        <AppRouter />
-                    </AppStateProvider>
-                    <ReactQueryDevtools initialIsOpen />
-                </ReactQueryCacheProvider>
-            </BrowserRouter>
-        </HashRouter>
+        <BrowserRouter>
+            <ReactQueryCacheProvider queryCache={queryCache}>
+                <AppStateProvider>
+                    <AppHeader />
+                    <AppMessage />
+                    <AppRouter />
+                </AppStateProvider>
+                <ReactQueryDevtools initialIsOpen />
+            </ReactQueryCacheProvider>
+        </BrowserRouter>
     )
 }
 
