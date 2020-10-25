@@ -2,10 +2,12 @@
   "name": "react-notes-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "scripts": {
     "start": "rescripts start",
     "build": "rescripts build",
     "test": "rescripts test",
+    "build:gh-pages": "rescripts build",
     "start:prod": "rescripts build && serve -s build"
   },
   "dependencies": {
