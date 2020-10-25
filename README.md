@@ -1,4 +1,9 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Github Pages
+
+For staging, we deploy every main branch push into `gh-pages`.
+
+- change the `homepage` field in `package.json` to `.`.
 
 ## Available Scripts
 
