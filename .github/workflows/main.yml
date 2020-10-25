@@ -5,7 +5,7 @@ name: react-notes-app
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   release:
     types: [published]
 
