@@ -4,8 +4,8 @@
 name: react-notes-app
 
 on:
-  push:
-    branches: [ main ]
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -25,9 +25,13 @@ jobs:
         - name: Build
           run: npm run build
 
-        - name: Deploy to gh-pages
-          uses: peaceiris/actions-gh-pages@v3
+        - name: Deploy to aws s3
+          uses: jakejarvis/s3-sync-action@master
           with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: ./build
-            force_orphan: true
+            args: --acl public-read --follow-symlinks --delete
+          env:
+            AWS_S3_BUCKET: 'wd-notes-app'
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_REGION: 'eu-central-1'
+            SOURCE_DIR: 'build'
