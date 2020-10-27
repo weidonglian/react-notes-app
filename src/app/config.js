@@ -3,7 +3,7 @@ const devConfig = {
 }
 
 const prodConfig = {
-    apiURL: `https://notes.api.biosave.org`
+    apiURL: `https://wd-notes-app.herokuapp.com`
 }
 
 export default process.env.NODE_ENV === 'production' ? prodConfig : devConfig
