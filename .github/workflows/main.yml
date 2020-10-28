@@ -25,13 +25,6 @@ jobs:
         - name: Build
           run: npm run build
 
-        - name: Deploy to gh-pages
-          uses: peaceiris/actions-gh-pages@v3
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: ./build
-            force_orphan: true
-
         - name: Deploy to aws s3
           uses: jakejarvis/s3-sync-action@master
           with:
