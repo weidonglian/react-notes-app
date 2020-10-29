@@ -41,7 +41,7 @@ export default function NotesList() {
     return (
         <Grid container spacing={2} className={classes.root}>
             {notes.data.map(note => (
-                <Grid key={note.id} item xs={4}>
+                <Grid key={note.id} item xs={12} sm={6} md={4} lg={3}>
                     <Paper className={classes.paper} onMouseEnter={() => setEditingNoteId(note.id)}
                            onMouseLeave={() => setEditingNoteId(-1)}>
                         <Typography variant='h5'>

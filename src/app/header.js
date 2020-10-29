@@ -13,20 +13,20 @@ import auth from '../services/auth'
 const useStyles = makeStyles(theme =>
     createStyles({
         root: {
-            flexGrow: 1
+            flexGrow: 1,
         },
         menuButton: {
-            marginRight: theme.spacing(2)
+            marginRight: theme.spacing(2),
         },
         title: {
-            flexGrow: 1
-        }
-    })
+            flexGrow: 1,
+        },
+    }),
 )
 
 export default function AppHeader() {
     const classes = useStyles()
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = React.useState(null)
     const open = Boolean(anchorEl)
     const history = useHistory()
 
@@ -35,11 +35,11 @@ export default function AppHeader() {
     //}
 
     const handleMenu = event => {
-        setAnchorEl(event.currentTarget);
+        setAnchorEl(event.currentTarget)
     }
 
     const handleClose = () => {
-        setAnchorEl(null);
+        setAnchorEl(null)
     }
 
     const handleLogin = () => {
@@ -63,12 +63,12 @@ export default function AppHeader() {
                         Notes
                     </Typography>
                     <IconButton aria-label="account of current user" aria-controls="menu-appbar"
-                        aria-haspopup="true" onClick={handleMenu} color="inherit">
+                                aria-haspopup="true" onClick={handleMenu} color="inherit">
                         <AccountCircle />
                     </IconButton>
-                    <Menu id="menu-appbar" anchorEl={anchorEl} anchorOrigin={{ vertical: 'top', horizontal: 'right', }}
-                        keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                        open={open} onClose={handleClose}>
+                    <Menu id="menu-appbar" anchorEl={anchorEl} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                          keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                          open={open} onClose={handleClose}>
                         {
                             !auth.isAuthenticated() ? <MenuItem onClick={handleLogin}>Login</MenuItem> :
                                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
