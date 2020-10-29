@@ -6,6 +6,7 @@ import * as yup from 'yup'
 import auth from '../../services/auth'
 import { Link as RouterLink, useHistory } from 'react-router-dom'
 import { actions, useAppState, variants } from '../../state/local'
+import { errorMessage } from '../../services/api-util'
 
 const formValuesSchema = yup.object({
     username: yup
@@ -57,6 +58,7 @@ const FormView = props => {
             />
             <Field
                 name='remember'
+                type="checkbox"
                 Label={{ label: 'Remember me' }}
                 component={CheckboxWithLabel}
                 color="primary"
@@ -96,27 +98,27 @@ export default function LoginForm() {
         remember: true,
     }
     const [, dispatch] = useAppState()
-    const handleSubmit = (values, helpers) => {
-        auth.login(values).then(() => {
+    const handleSubmit = async (values, helpers) => {
+        try {
+            await auth.login(values)
             dispatch({
                 type: actions.SHOW_MESSAGE,
                 payload: {
-                    message: 'Login succeeded',
+                    message: `Login succeeded with '${values.username}'`,
                     variant: variants.SUCCESS,
                 },
             })
             history.push('/')
-        }).catch(error => {
+        } catch (e) {
             helpers.setSubmitting(false)
-            if (error?.response?.data?.message)
-                dispatch({
-                    type: actions.SHOW_MESSAGE,
-                    payload: {
-                        message: error.response.data.message,
-                        variant: variants.ERROR,
-                    },
-                })
-        })
+            dispatch({
+                type: actions.SHOW_MESSAGE,
+                payload: {
+                    message: errorMessage(e),
+                    variant: variants.ERROR,
+                },
+            })
+        }
     }
 
     return (
