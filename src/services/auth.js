@@ -15,10 +15,6 @@ class AuthService {
         }
     }
 
-    async signup(user) {
-        return api.signup(user)
-    }
-
     async login(user) {
         const { token } = await api.login(user)
         this.setCredentials({

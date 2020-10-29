@@ -14,8 +14,9 @@ import Copyright from '../../components/login/copyright'
 import * as yup from 'yup'
 import { TextField } from 'formik-material-ui'
 import { Form, Field, Formik } from 'formik'
-import auth from '../../services/auth'
 import { actions, useAppState, variants } from '../../state/local'
+import api from '../../services/api'
+import { errorMessage } from '../../services/api-util'
 
 const formValuesSchema = yup.object({
   username: yup
@@ -120,28 +121,28 @@ export default function SignupForm() {
     password: '',
   }
 
-  const handleSubmit = (values, helpers) => {
-    auth.signup(values).then((response) => {
+  const handleSubmit = async (values, helpers) => {
+    try {
+      const data = await api.signup(values)
       dispatch({
         type: actions.SHOW_MESSAGE,
         payload: {
-          message: `Signup for '${response.data.username}'  succeeded`,
+          message: `Signup for '${data.username}'  succeeded`,
           variant: variants.SUCCESS,
         },
       })
       history.push('/')
-    }).catch(error => {
+    } catch (e) {
       helpers.setSubmitting(false)
-      if (error.response.data.message) {
-        dispatch({
-          type: actions.SHOW_MESSAGE,
-          payload: {
-            message: error.response.data.message,
-            variant: variants.ERROR,
-          },
-        })
-      }
-    })
+      dispatch({
+        type: actions.SHOW_MESSAGE,
+        payload: {
+          message: errorMessage(e),
+          variant: variants.ERROR,
+        },
+      })
+    }
+
   }
 
   return (
