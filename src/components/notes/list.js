@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
         minWidth: '120px',
         padding: theme.spacing(2),
         '&:hover': {
-            borderStyle: 'solid',
+            boxShadow: '0 0 11px rgba(33,33,33,.2)',
         },
     },
     control: {
