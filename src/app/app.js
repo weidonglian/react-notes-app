@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
+import Container from '@material-ui/core/Container'
 import AppRouter from './router'
 import AppHeader from './header'
 import AppMessage from './message'
@@ -14,9 +15,11 @@ export default function App() {
         <BrowserRouter>
             <ReactQueryCacheProvider queryCache={queryCache}>
                 <LocalStateProvider>
-                    <AppHeader />
-                    <AppMessage />
-                    <AppRouter />
+                    <Container maxWidth="lg">
+                        <AppHeader />
+                        <AppMessage />
+                        <AppRouter />
+                    </Container>
                 </LocalStateProvider>
                 <ReactQueryDevtools initialIsOpen />
             </ReactQueryCacheProvider>
