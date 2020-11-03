@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom'
 import AppRouter from './router'
 import AppHeader from './header'
 import AppMessage from './message'
-import AppStateProvider from '../state/local'
+import LocalStateProvider from '../state/local'
 import { QueryCache, ReactQueryCacheProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query-devtools'
 
@@ -13,11 +13,11 @@ export default function App() {
     return (
         <BrowserRouter>
             <ReactQueryCacheProvider queryCache={queryCache}>
-                <AppStateProvider>
+                <LocalStateProvider>
                     <AppHeader />
                     <AppMessage />
                     <AppRouter />
-                </AppStateProvider>
+                </LocalStateProvider>
                 <ReactQueryDevtools initialIsOpen />
             </ReactQueryCacheProvider>
         </BrowserRouter>

@@ -12,7 +12,7 @@ export const variants = {
   ERROR: 'error'
 }
 
-const appState = {
+const localState = {
   appMessage: {
     message: '',
     variant: variants.SUCCESS,
@@ -20,7 +20,7 @@ const appState = {
   }
 }
 
-function appStateReducer(state = appState, action) {
+function localStateReducer(state = localState, action) {
   switch (action.type) {
     case actions.SHOW_MESSAGE:
       return {
@@ -43,15 +43,15 @@ function appStateReducer(state = appState, action) {
   }
 }
 
-const appStateContext = React.createContext([])
+const localStateContext = React.createContext([])
 
-export const useAppState = () => React.useContext(appStateContext)
+export const useLocalState = () => React.useContext(localStateContext)
 
-export default function AppStateProvider({ children }) {
-  const [state, dispatch] = React.useReducer(appStateReducer, appState, undefined)
+export default function LocalStateProvider({ children }) {
+  const [state, dispatch] = React.useReducer(localStateReducer, localState, undefined)
   return (
-    <appStateContext.Provider value={[state, dispatch]}>
+    <localStateContext.Provider value={[state, dispatch]}>
       {children}
-    </appStateContext.Provider>
+    </localStateContext.Provider>
   )
 }
