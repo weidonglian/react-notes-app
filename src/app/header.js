@@ -47,8 +47,8 @@ export default function AppHeader() {
         history.push('/login')
     }
 
-    const handleLogout = () => {
-        auth.logout()
+    const handleLogout = async () => {
+        await auth.logout()
         handleLogin()
     }
 

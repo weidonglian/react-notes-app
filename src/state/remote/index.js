@@ -1,49 +1,26 @@
-import { useMutation, useQuery, useQueryCache } from 'react-query'
-import api from '../../services/api'
-import produce from 'immer'
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
+import config from '../../app/config'
+import { setContext } from '@apollo/client/link/context'
+import auth from '../../services/auth'
 
-export const queryKeys = {
-    notes: 'notes',
-}
+const baseURL = config.apiURL
 
-export const useQueryNotes = () => useQuery(queryKeys.notes, api.getNotes)
+const httpLink = createHttpLink({
+    uri: `${baseURL}/graphql`,
+})
 
-export const useMutationAddNote = () => {
-    const queryCache = useQueryCache()
-    return useMutation(api.addNote, {
-        onSuccess: data => {
-            queryCache.setQueryData(queryKeys.notes, old => [...old, data])
+const authLink = setContext((_, { headers }) => {
+    const token = auth.credentials?.access_token
+    // return the headers to the context so httpLink can read them
+    return {
+        headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : '',
         },
-    })
-}
+    }
+})
 
-export const useMutationAddTodo = () => {
-    const queryCache = useQueryCache()
-    return useMutation(api.addTodo, {
-        onSuccess: data => {
-            queryCache.setQueryData(queryKeys.notes, old => produce(old, s => {
-                const noteIndex = s.findIndex(note => note.id === data.noteId)
-                if (noteIndex > -1) {
-                    s[noteIndex].todos.push(data)
-                }
-            }))
-        },
-    })
-}
-
-export const useMutationToggleTodo = () => {
-    const queryCache = useQueryCache()
-    return useMutation(api.toggleTodo, {
-        onSuccess: data => {
-            queryCache.setQueryData(queryKeys.notes, old => produce(old, s => {
-                const noteIndex = s.findIndex(note => note.id === data.noteId)
-                if (noteIndex > -1) {
-                    const todoIndex = s[noteIndex].todos.findIndex(todo => todo.id === data.id)
-                    if (todoIndex > -1) {
-                        s[noteIndex].todos[todoIndex].done = data.done
-                    }
-                }
-            }))
-        },
-    })
-}
+export const client = new ApolloClient({
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache(),
+})

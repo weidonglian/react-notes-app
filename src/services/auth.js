@@ -1,4 +1,5 @@
 import api, {apiClient} from './api'
+import { client } from '../state/remote'
 
 const credentialsKey = 'credentials'
 
@@ -30,8 +31,8 @@ class AuthService {
             await api.logout().catch(err => {
                 console.log('logout session with error:', err)
             })
-
         }
+        await client.resetStore()
     }
 
     get username() {

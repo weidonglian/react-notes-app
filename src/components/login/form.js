@@ -6,7 +6,7 @@ import * as yup from 'yup'
 import auth from '../../services/auth'
 import { Link as RouterLink, useHistory } from 'react-router-dom'
 import { actions, useLocalState, variants } from '../../state/local'
-import { errorMessage } from '../../services/api-util'
+import api from '../../services/api'
 
 const formValuesSchema = yup.object({
     username: yup
@@ -114,7 +114,7 @@ export default function LoginForm() {
             dispatch({
                 type: actions.SHOW_MESSAGE,
                 payload: {
-                    message: errorMessage(e),
+                    message: api.extractErrorMessage(e),
                     variant: variants.ERROR,
                 },
             })
