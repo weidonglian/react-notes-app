@@ -14,7 +14,7 @@ import Copyright from '../../components/login/copyright'
 import * as yup from 'yup'
 import { TextField } from 'formik-material-ui'
 import { Form, Field, Formik } from 'formik'
-import { actions, useAppState, variants } from '../../state/local'
+import { actions, useLocalState, variants } from '../../state/local'
 import api from '../../services/api'
 import { errorMessage } from '../../services/api-util'
 
@@ -115,7 +115,7 @@ const FormView = props => {
 
 export default function SignupForm() {
   const history = useHistory()
-  const [, dispatch] = useAppState()
+  const [, dispatch] = useLocalState()
   const initialValues = {
     username: '',
     password: '',

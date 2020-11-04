@@ -5,7 +5,7 @@ import { Form, Field, Formik } from 'formik'
 import * as yup from 'yup'
 import auth from '../../services/auth'
 import { Link as RouterLink, useHistory } from 'react-router-dom'
-import { actions, useAppState, variants } from '../../state/local'
+import { actions, useLocalState, variants } from '../../state/local'
 import { errorMessage } from '../../services/api-util'
 
 const formValuesSchema = yup.object({
@@ -97,7 +97,7 @@ export default function LoginForm() {
         password: '',
         remember: true,
     }
-    const [, dispatch] = useAppState()
+    const [, dispatch] = useLocalState()
     const handleSubmit = async (values, helpers) => {
         try {
             await auth.login(values)
