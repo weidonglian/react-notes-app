@@ -15,6 +15,12 @@ mutation AddNote($input: AddNoteInput!) {
   addNote(input: $input) {
     id
     name
+    todos {
+      id
+      name
+      done
+      noteId
+    }
   }
 }
 `
@@ -33,6 +39,12 @@ export default function NotesAdd() {
                                 fragment NewNote on Note {
                                     id
                                     name
+                                    todos {
+                                      id
+                                      name
+                                      done
+                                      noteId
+                                    }
                                 }
                             `
                         })

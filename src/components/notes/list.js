@@ -67,8 +67,9 @@ export default function NotesList() {
     const [addTodo] = useMutation(ADD_TODO, {
         update(cache, { data: { addTodo } }) {
             cache.modify({
+                id: `Note:${addTodo.noteId}`,
                 fields: {
-                    todos(existingTodos = []) {
+                    todos(existingTodoRefs = []) {
                         const newTodoRef = cache.writeFragment({
                             data: addTodo,
                             fragment: gql`
@@ -80,7 +81,7 @@ export default function NotesList() {
                               }
                             `,
                         })
-                        return [...existingTodos, newTodoRef]
+                        return [...existingTodoRefs, newTodoRef]
                     },
                 },
             })

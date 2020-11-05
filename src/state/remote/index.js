@@ -9,14 +9,14 @@ const httpLink = createHttpLink({
     uri: `${baseURL}/graphql`,
 })
 
-const authLink = setContext((_, { headers }) => {
+const authLink = setContext((_, { headers, ...context }) => {
     const token = auth.credentials?.access_token
-    // return the headers to the context so httpLink can read them
     return {
         headers: {
             ...headers,
-            authorization: token ? `Bearer ${token}` : '',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
+        ...context,
     }
 })
 
