@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper'
 import React from 'react'
 import TodosListView from '../todos/list-view'
 import TodosAddView from '../todos/add-view'
-import { useQuery, useMutation, gql } from '@apollo/client'
+import { gql, useMutation, useQuery } from '@apollo/client'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -48,6 +48,15 @@ mutation ToggleTodo($input: ToggleTodoInput!){
 }
 `
 
+const DELETE_TODO = gql`
+mutation DeleteTodo($input: DeleteTodoInput!){
+  deleteTodo(input: $input) {
+    id
+    noteId
+  }
+}
+`
+
 const ADD_TODO = gql`
 mutation AddTodo($input: AddTodoInput!){
   addTodo(input: $input) {
@@ -61,7 +70,6 @@ mutation AddTodo($input: AddTodoInput!){
 
 export default function NotesList() {
     const classes = useStyles()
-    const [editingNoteId, setEditingNoteId] = React.useState(-1)
     const { loading, error, data } = useQuery(GET_NOTES)
     const [toggleTodo] = useMutation(TOGGLE_TODO)
     const [addTodo] = useMutation(ADD_TODO, {
@@ -69,22 +77,17 @@ export default function NotesList() {
             cache.modify({
                 id: `Note:${addTodo.noteId}`,
                 fields: {
-                    todos(existingTodoRefs = []) {
-                        const newTodoRef = cache.writeFragment({
-                            data: addTodo,
-                            fragment: gql`
-                              fragment NewTodo on Todo {
-                                id
-                                name
-                                done
-                                noteId
-                              }
-                            `,
-                        })
-                        return [...existingTodoRefs, newTodoRef]
+                    todos(existingTodoRefs = [], { toReference }) {
+                        return [...existingTodoRefs, toReference(addTodo)]
                     },
                 },
             })
+        },
+    })
+
+    const [deleteTodo] = useMutation(DELETE_TODO, {
+        update(cache, { data: { deleteTodo } }) {
+            cache.evict({ id: `Todo:${deleteTodo.id}` })
         },
     })
 
@@ -100,12 +103,19 @@ export default function NotesList() {
         <Grid container spacing={2} className={classes.root}>
             {data.notes.map(note => (
                 <Grid key={note.id} item xs={12} sm={6} md={4} lg={3}>
-                    <Paper className={classes.paper} onMouseEnter={() => setEditingNoteId(note.id)}
-                           onMouseLeave={() => setEditingNoteId(-1)}>
+                    <Paper className={classes.paper}>
                         <Typography variant='h5'>
                             {note.name}
                         </Typography>
                         <TodosListView todos={note.todos}
+                                       deleteTodo={todoId => deleteTodo({
+                                           variables: {
+                                               input: {
+                                                   id: todoId,
+                                                   noteId: note.id,
+                                               },
+                                           },
+                                       })}
                                        toggleTodo={todoId => toggleTodo({
                                            variables: {
                                                input: {
@@ -114,7 +124,6 @@ export default function NotesList() {
                                                },
                                            },
                                        })} />
-                        {editingNoteId === note.id &&
                         <TodosAddView addTodo={({ name }) => addTodo({
                             variables: {
                                 input: {
@@ -122,7 +131,7 @@ export default function NotesList() {
                                     noteId: note.id,
                                 },
                             },
-                        })} />}
+                        })} />
                     </Paper>
                 </Grid>
             ))}

@@ -17,6 +17,14 @@ class AuthService {
         }
     }
 
+    get username() {
+        return this._credentials ? this._credentials.username : null
+    }
+
+    get credentials() {
+        return this._credentials
+    }
+
     async login(user) {
         const { token } = await api.login(user)
         this.setAndStoreCredentials({
@@ -38,16 +46,8 @@ class AuthService {
         await client.cache.reset()
     }
 
-    get username() {
-        return this._credentials ? this._credentials.username : null
-    }
-
     isAuthenticated() {
         return !!this._credentials
-    }
-
-    get credentials() {
-        return this._credentials
     }
 
     setAndStoreCredentials(credentials, remember) {

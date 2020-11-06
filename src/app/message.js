@@ -13,75 +13,75 @@ import { makeStyles } from '@material-ui/core/styles'
 import { actions, useLocalState } from '../state/local'
 
 const useStyles = makeStyles(theme => ({
-  success: {
-    backgroundColor: green[600],
-  },
-  error: {
-    backgroundColor: theme.palette.error.dark,
-  },
-  info: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  warning: {
-    backgroundColor: amber[700],
-  },
-  icon: {
-    fontSize: 20,
-  },
-  iconVariant: {
-    opacity: 0.9,
-    marginRight: theme.spacing(1),
-  },
-  message: {
-    display: 'flex',
-    alignItems: 'center',
-  },
+    success: {
+        backgroundColor: green[600],
+    },
+    error: {
+        backgroundColor: theme.palette.error.dark,
+    },
+    info: {
+        backgroundColor: theme.palette.primary.main,
+    },
+    warning: {
+        backgroundColor: amber[700],
+    },
+    icon: {
+        fontSize: 20,
+    },
+    iconVariant: {
+        opacity: 0.9,
+        marginRight: theme.spacing(1),
+    },
+    message: {
+        display: 'flex',
+        alignItems: 'center',
+    },
 }))
 
 const variantIcon = {
-  success: CheckCircleIcon,
-  warning: WarningIcon,
-  error: ErrorIcon,
-  info: InfoIcon,
+    success: CheckCircleIcon,
+    warning: WarningIcon,
+    error: ErrorIcon,
+    info: InfoIcon,
 }
 
 export default function AppMessage() {
-  const classes = useStyles()
-  const [state, dispatch] = useLocalState()
-  const { message, variant, visible } = state.appMessage
-  const Icon = variantIcon[variant]
-  const handleClose = () => {
-    dispatch({
-      type: actions.HIDE_MESSAGE,
-      payload: {},
-    })
-  }
+    const classes = useStyles()
+    const [state, dispatch] = useLocalState()
+    const { message, variant, visible } = state.appMessage
+    const Icon = variantIcon[variant]
+    const handleClose = () => {
+        dispatch({
+            type: actions.HIDE_MESSAGE,
+            payload: {},
+        })
+    }
 
-  return (
-    <Snackbar
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left',
-      }}
-      open={visible}
-      autoHideDuration={5000}
-      onClose={handleClose}
-    >
-      <SnackbarContent
-        className={classes[variant]}
-        aria-describedby="client-snackbar"
-        message={
-          <span id="client-snackbar" className={classes.message}>
+    return (
+        <Snackbar
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+            }}
+            open={visible}
+            autoHideDuration={5000}
+            onClose={handleClose}
+        >
+            <SnackbarContent
+                className={classes[variant]}
+                aria-describedby="client-snackbar"
+                message={
+                    <span id="client-snackbar" className={classes.message}>
             <Icon className={clsx(classes.icon, classes.iconVariant)} />
-            {message}
+                        {message}
           </span>
-        }
-        action={[
-          <IconButton key="close" aria-label="close" color="inherit" onClick={handleClose}>
-            <CloseIcon className={classes.icon} />
-          </IconButton>,
-        ]}
-      />
-    </Snackbar>
-  )
+                }
+                action={[
+                    <IconButton key="close" aria-label="close" color="inherit" onClick={handleClose}>
+                        <CloseIcon className={classes.icon} />
+                    </IconButton>,
+                ]}
+            />
+        </Snackbar>
+    )
 }
