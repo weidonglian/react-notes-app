@@ -88,21 +88,6 @@ export default function NotesList() {
 
     const [deleteTodo] = useMutation(DELETE_TODO, {
         update(cache, { data: { deleteTodo } }) {
-            cache.modify({
-                id: `Note:${deleteTodo.noteId}`,
-                fields: {
-                    todos(existingTodoRefs = [], { toReference }) {
-                        const deleteTodoRef = toReference({
-                            id: deleteTodo.id,
-                            noteId: deleteTodo.noteId,
-                            __typename: 'Todo',
-                        })
-                        console.log("delete ref is:", existingTodoRefs)
-                        console.log("delete ref is:", deleteTodoRef)
-                        return [...existingTodoRefs.filter(item => item['__ref'] !== deleteTodoRef['__ref'])]
-                    },
-                },
-            })
             cache.evict({ id: `Todo:${deleteTodo.id}` })
         },
     })
