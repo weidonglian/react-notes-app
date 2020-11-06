@@ -5,15 +5,13 @@ import AppRouter from './router'
 import AppHeader from './header'
 import AppMessage from './message'
 import LocalStateProvider from '../state/local'
-import { QueryCache, ReactQueryCacheProvider } from 'react-query'
-import { ReactQueryDevtools } from 'react-query-devtools'
-
-const queryCache = new QueryCache()
+import { ApolloProvider } from '@apollo/client'
+import { client } from '../state/remote'
 
 export default function App() {
     return (
         <BrowserRouter>
-            <ReactQueryCacheProvider queryCache={queryCache}>
+            <ApolloProvider client={client}>
                 <LocalStateProvider>
                     <Container maxWidth="lg">
                         <AppHeader />
@@ -21,8 +19,7 @@ export default function App() {
                         <AppRouter />
                     </Container>
                 </LocalStateProvider>
-                <ReactQueryDevtools initialIsOpen />
-            </ReactQueryCacheProvider>
+            </ApolloProvider>
         </BrowserRouter>
     )
 }

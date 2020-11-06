@@ -1,19 +1,30 @@
 import axios from 'axios'
 import config from '../app/config'
+import auth from './auth'
 
 const baseURL = config.apiURL
 
 const createApiClient = () => {
-    return axios.create({
+    const instance = axios.create({
         baseURL: baseURL,
         responseType: 'json',
     })
+    return instance
 }
 
-export const apiClient = createApiClient()
+const rawApiClient = createApiClient()
+
+const apiClient = createApiClient()
+
+apiClient.interceptors.request.use(config => {
+    if (auth.isAuthenticated()) {
+        config.headers.Authorization = `Bearer ${auth.credentials.access_token}`
+    }
+    return config
+})
 
 const login = async ({ username, password }) => {
-    const { data } = await apiClient.post('/session', {
+    const { data } = await rawApiClient.post('/session', {
         username,
         password,
     })
@@ -21,47 +32,20 @@ const login = async ({ username, password }) => {
 }
 
 const logout = async () => {
-    const { data } = await  apiClient.delete('/session')
+    const { data } = await apiClient.delete('/session')
     return data
 }
 
 const signup = async ({ username, password }) => {
-    const { data } = await apiClient.post('/users/new', {
+    const { data } = await rawApiClient.post('/users/new', {
         username,
         password,
     })
     return data
 }
 
-const getNotes = async () => {
-    const { data } = await apiClient.get('/notes')
-    return data
+const extractErrorMessage = e => {
+    return e?.response?.data?.error ? e.response.data.error : String(e)
 }
 
-const addNote = async ({ name }) => {
-    const { data } = await apiClient.post('/notes', {
-        name,
-    })
-    return data
-}
-
-const addTodo = async ({ noteId, name }) => {
-    const { data } = await apiClient.post('/todos', {
-        name, noteId,
-    })
-    return data
-}
-
-const updateTodo = async ({ id, name, done }) => {
-    const { data } = await apiClient.put(`/todos/${id}`, {
-        name, done,
-    })
-    return data
-}
-
-const toggleTodo = async ({ id }) => {
-    const { data } = await apiClient.put(`/todos/${id}/toggle`)
-    return data
-}
-
-export default { login, logout, signup, getNotes, addNote, addTodo, updateTodo, toggleTodo }
+export default { login, logout, signup, extractErrorMessage }

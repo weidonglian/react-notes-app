@@ -16,7 +16,6 @@ import { TextField } from 'formik-material-ui'
 import { Form, Field, Formik } from 'formik'
 import { actions, useLocalState, variants } from '../../state/local'
 import api from '../../services/api'
-import { errorMessage } from '../../services/api-util'
 
 const formValuesSchema = yup.object({
   username: yup
@@ -137,7 +136,7 @@ export default function SignupForm() {
       dispatch({
         type: actions.SHOW_MESSAGE,
         payload: {
-          message: errorMessage(e),
+          message: api.extractErrorMessage(e),
           variant: variants.ERROR,
         },
       })

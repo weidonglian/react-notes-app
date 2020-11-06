@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper'
 import React from 'react'
 import TodosListView from '../todos/list-view'
 import TodosAddView from '../todos/add-view'
-import { useMutationAddTodo, useMutationToggleTodo, useQueryNotes } from '../../state/remote'
+import { useQuery, useMutation, gql } from '@apollo/client'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -23,24 +23,82 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
+const GET_NOTES = gql`
+query GetNotes {
+  notes {
+    id
+    name    
+    todos {
+      id
+      name
+      done
+      noteId
+    }
+  }
+}
+`
+
+const TOGGLE_TODO = gql`
+mutation ToggleTodo($input: ToggleTodoInput!){
+  toggleTodo(input: $input) {
+    id
+    done
+    noteId
+  }
+}
+`
+
+const ADD_TODO = gql`
+mutation AddTodo($input: AddTodoInput!){
+  addTodo(input: $input) {
+    id
+    name
+    done
+    noteId
+  }
+}
+`
+
 export default function NotesList() {
     const classes = useStyles()
     const [editingNoteId, setEditingNoteId] = React.useState(-1)
-    const notes = useQueryNotes()
-    const [addTodo] = useMutationAddTodo()
-    const [toggleTodo] = useMutationToggleTodo()
+    const { loading, error, data } = useQuery(GET_NOTES)
+    const [toggleTodo] = useMutation(TOGGLE_TODO)
+    const [addTodo] = useMutation(ADD_TODO, {
+        update(cache, { data: { addTodo } }) {
+            cache.modify({
+                id: `Note:${addTodo.noteId}`,
+                fields: {
+                    todos(existingTodoRefs = []) {
+                        const newTodoRef = cache.writeFragment({
+                            data: addTodo,
+                            fragment: gql`
+                              fragment NewTodo on Todo {
+                                id
+                                name
+                                done
+                                noteId
+                              }
+                            `,
+                        })
+                        return [...existingTodoRefs, newTodoRef]
+                    },
+                },
+            })
+        },
+    })
 
-    if (notes.isLoading) {
+    if (loading) {
         return <span>Loading...</span>
     }
 
-    if (notes.isError) {
-        return <span>Error: {notes.error.message}</span>
+    if (error) {
+        return <span>{`Error: ${error}`}</span>
     }
 
     return (
         <Grid container spacing={2} className={classes.root}>
-            {notes.data.map(note => (
+            {data.notes.map(note => (
                 <Grid key={note.id} item xs={12} sm={6} md={4} lg={3}>
                     <Paper className={classes.paper} onMouseEnter={() => setEditingNoteId(note.id)}
                            onMouseLeave={() => setEditingNoteId(-1)}>
@@ -48,9 +106,23 @@ export default function NotesList() {
                             {note.name}
                         </Typography>
                         <TodosListView todos={note.todos}
-                                       toggleTodo={todoId => toggleTodo({ id: todoId })} />
+                                       toggleTodo={todoId => toggleTodo({
+                                           variables: {
+                                               input: {
+                                                   id: todoId,
+                                                   noteId: note.id,
+                                               },
+                                           },
+                                       })} />
                         {editingNoteId === note.id &&
-                        <TodosAddView addTodo={({ name }) => addTodo({ noteId: note.id, name })} />}
+                        <TodosAddView addTodo={({ name }) => addTodo({
+                            variables: {
+                                input: {
+                                    name: name,
+                                    noteId: note.id,
+                                },
+                            },
+                        })} />}
                     </Paper>
                 </Grid>
             ))}

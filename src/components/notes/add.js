@@ -2,7 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Fab, TextFie
 import AddIcon from '@material-ui/icons/Add'
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useMutationAddNote } from '../../state/remote'
+import { useMutation, gql } from '@apollo/client'
 
 const useStyles = makeStyles(theme => ({
     fab: {
@@ -10,10 +10,50 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
+const ADD_NOTE = gql`
+mutation AddNote($input: AddNoteInput!) {
+  addNote(input: $input) {
+    id
+    name
+    todos {
+      id
+      name
+      done
+      noteId
+    }
+  }
+}
+`
+
 export default function NotesAdd() {
     const [open, setOpen] = useState(false)
     const [name, setName] = useState('')
-    const [addNote] = useMutationAddNote()
+    const [addNote] = useMutation(ADD_NOTE, {
+        update(cache, { data: { addNote } }) {
+            cache.modify({
+                fields: {
+                    notes(existingNotes = []) {
+                        const newNoteRef = cache.writeFragment({
+                            data: addNote,
+                            fragment: gql`
+                                fragment NewNote on Note {
+                                    id
+                                    name
+                                    todos {
+                                      id
+                                      name
+                                      done
+                                      noteId
+                                    }
+                                }
+                            `
+                        })
+                        return [...existingNotes, newNoteRef]
+                    }
+                }
+            })
+        },
+    })
     const classes = useStyles()
 
     const handleClose = () => {
@@ -23,7 +63,13 @@ export default function NotesAdd() {
     const handleSubmit = () => {
         handleClose()
         if (name) {
-            addNote({ name }).catch(err => {
+            addNote({
+                variables: {
+                    input: {
+                        name: name,
+                    },
+                },
+            }).catch(err => {
                 console.log('addNote with error:', err)
             })
         }

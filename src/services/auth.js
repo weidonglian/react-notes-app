@@ -1,4 +1,5 @@
-import api, {apiClient} from './api'
+import api from './api'
+import { client } from '../state/remote'
 
 const credentialsKey = 'credentials'
 
@@ -8,30 +9,33 @@ const credentialsKey = 'credentials'
  */
 class AuthService {
     constructor() {
-        this._credentials = undefined
+        this._credentials = null
+        // load from storage if available
         const savedCredentials = sessionStorage.getItem(credentialsKey) || localStorage.getItem(credentialsKey)
         if (savedCredentials) {
-            this.setCredentials(JSON.parse(savedCredentials), true)
+            this._credentials = JSON.parse(savedCredentials)
         }
     }
 
     async login(user) {
         const { token } = await api.login(user)
-        this.setCredentials({
+        this.setAndStoreCredentials({
             username: user.username,
             access_token: token,
             refresh_token: token,
         }, user.remember)
+        await client.resetStore()
     }
 
     async logout() {
-        this.setCredentials()
         if (this.isAuthenticated()) {
             await api.logout().catch(err => {
                 console.log('logout session with error:', err)
             })
-
         }
+        this.setAndStoreCredentials(null)
+        await client.clearStore()
+        await client.cache.reset()
     }
 
     get username() {
@@ -46,17 +50,13 @@ class AuthService {
         return this._credentials
     }
 
-    setCredentials(credentials, remember) {
+    setAndStoreCredentials(credentials, remember) {
         this._credentials = credentials || null
-
-        if (credentials) {
+        sessionStorage.removeItem(credentialsKey)
+        localStorage.removeItem(credentialsKey)
+        if (this._credentials) {
             const storage = remember ? localStorage : sessionStorage
-            storage.setItem(credentialsKey, JSON.stringify(credentials))
-            apiClient.defaults.headers.common['Authorization'] = `Bearer ${credentials.access_token}`
-        } else {
-            sessionStorage.removeItem(credentialsKey)
-            localStorage.removeItem(credentialsKey)
-            apiClient.defaults.headers.common['Authorization'] = null
+            storage.setItem(credentialsKey, JSON.stringify(this._credentials))
         }
     }
 }
