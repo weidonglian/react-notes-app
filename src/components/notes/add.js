@@ -32,23 +32,8 @@ export default function NotesAdd() {
         update(cache, { data: { addNote } }) {
             cache.modify({
                 fields: {
-                    notes(existingNotes = []) {
-                        const newNoteRef = cache.writeFragment({
-                            data: addNote,
-                            fragment: gql`
-                                fragment NewNote on Note {
-                                    id
-                                    name
-                                    todos {
-                                      id
-                                      name
-                                      done
-                                      noteId
-                                    }
-                                }
-                            `
-                        })
-                        return [...existingNotes, newNoteRef]
+                    notes(existingNotes = [], { toReference }) {
+                        return [...existingNotes, toReference(addNote)]
                     }
                 }
             })

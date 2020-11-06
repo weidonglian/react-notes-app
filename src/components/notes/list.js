@@ -48,6 +48,15 @@ mutation ToggleTodo($input: ToggleTodoInput!){
 }
 `
 
+const DELETE_TODO = gql`
+mutation DeleteTodo($input: DeleteTodoInput!){
+  deleteTodo(input: $input) {
+    id
+    noteId
+  }
+}
+`
+
 const ADD_TODO = gql`
 mutation AddTodo($input: AddTodoInput!){
   addTodo(input: $input) {
@@ -69,22 +78,32 @@ export default function NotesList() {
             cache.modify({
                 id: `Note:${addTodo.noteId}`,
                 fields: {
-                    todos(existingTodoRefs = []) {
-                        const newTodoRef = cache.writeFragment({
-                            data: addTodo,
-                            fragment: gql`
-                              fragment NewTodo on Todo {
-                                id
-                                name
-                                done
-                                noteId
-                              }
-                            `,
-                        })
-                        return [...existingTodoRefs, newTodoRef]
+                    todos(existingTodoRefs = [], { toReference }) {
+                        return [...existingTodoRefs, toReference(addTodo)]
                     },
                 },
             })
+        },
+    })
+
+    const [deleteTodo] = useMutation(DELETE_TODO, {
+        update(cache, { data: { deleteTodo } }) {
+            cache.modify({
+                id: `Note:${deleteTodo.noteId}`,
+                fields: {
+                    todos(existingTodoRefs = [], { toReference }) {
+                        const deleteTodoRef = toReference({
+                            id: deleteTodo.id,
+                            noteId: deleteTodo.noteId,
+                            __typename: 'Todo',
+                        })
+                        console.log("delete ref is:", existingTodoRefs)
+                        console.log("delete ref is:", deleteTodoRef)
+                        return [...existingTodoRefs.filter(item => item['__ref'] !== deleteTodoRef['__ref'])]
+                    },
+                },
+            })
+            cache.evict({ id: `Todo:${deleteTodo.id}` })
         },
     })
 
@@ -106,6 +125,14 @@ export default function NotesList() {
                             {note.name}
                         </Typography>
                         <TodosListView todos={note.todos}
+                                       deleteTodo={todoId => deleteTodo({
+                                           variables: {
+                                               input: {
+                                                   id: todoId,
+                                                   noteId: note.id,
+                                               },
+                                           },
+                                       })}
                                        toggleTodo={todoId => toggleTodo({
                                            variables: {
                                                input: {
