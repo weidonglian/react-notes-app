@@ -70,7 +70,6 @@ mutation AddTodo($input: AddTodoInput!){
 
 export default function NotesList() {
     const classes = useStyles()
-    const [editingNoteId, setEditingNoteId] = React.useState(-1)
     const { loading, error, data } = useQuery(GET_NOTES)
     const [toggleTodo] = useMutation(TOGGLE_TODO)
     const [addTodo] = useMutation(ADD_TODO, {
@@ -104,8 +103,7 @@ export default function NotesList() {
         <Grid container spacing={2} className={classes.root}>
             {data.notes.map(note => (
                 <Grid key={note.id} item xs={12} sm={6} md={4} lg={3}>
-                    <Paper className={classes.paper} onMouseEnter={() => setEditingNoteId(note.id)}
-                           onMouseLeave={() => setEditingNoteId(-1)}>
+                    <Paper className={classes.paper}>
                         <Typography variant='h5'>
                             {note.name}
                         </Typography>
@@ -126,7 +124,6 @@ export default function NotesList() {
                                                },
                                            },
                                        })} />
-                        {editingNoteId === note.id &&
                         <TodosAddView addTodo={({ name }) => addTodo({
                             variables: {
                                 input: {
@@ -134,7 +131,7 @@ export default function NotesList() {
                                     noteId: note.id,
                                 },
                             },
-                        })} />}
+                        })} />
                     </Paper>
                 </Grid>
             ))}
