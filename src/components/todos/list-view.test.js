@@ -8,7 +8,7 @@ describe('TodosListView', () => {
         const todos = ['todo1', 'todo3', 'todo2'].map((item, index) => ({
             id: index,
             name: item,
-            done: false
+            done: false,
         }))
         const t = render(<TodosListView todos={todos} toggleTodo={toggleTodoMock} />)
         //t.debug(t.container)

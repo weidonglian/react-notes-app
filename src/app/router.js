@@ -18,18 +18,18 @@ const RestrictedRoute = props => (
 )
 
 export default function AppRouter() {
-  return (
-    <Switch>
-      <Route exact path='/'>
-        <Redirect to='/notes' />
-      </Route>
-      <Route exact path='/signup' component={SignupPage} />
-      <RestrictedRoute exact path='/login'>
-        <LoginPage />
-      </RestrictedRoute>
-      <PrivateRoute exact path='/notes'>
-        <NotesPage />
-      </PrivateRoute>
-    </Switch>
-  )
+    return (
+        <Switch>
+            <Route exact path='/'>
+                <Redirect to='/notes' />
+            </Route>
+            <Route exact path='/signup' component={SignupPage} />
+            <RestrictedRoute exact path='/login'>
+                <LoginPage />
+            </RestrictedRoute>
+            <PrivateRoute exact path='/notes'>
+                <NotesPage />
+            </PrivateRoute>
+        </Switch>
+    )
 }

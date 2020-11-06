@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper'
 import React from 'react'
 import TodosListView from '../todos/list-view'
 import TodosAddView from '../todos/add-view'
-import { useQuery, useMutation, gql } from '@apollo/client'
+import { gql, useMutation, useQuery } from '@apollo/client'
 
 const useStyles = makeStyles(theme => ({
     root: {
