@@ -1,7 +1,8 @@
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client'
+import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache } from '@apollo/client'
 import config from '../../app/config'
 import { setContext } from '@apollo/client/link/context'
 import auth from '../../services/auth'
+import { onError } from '@apollo/client/link/error'
 
 const baseURL = config.apiURL
 
@@ -20,7 +21,11 @@ const authLink = setContext((_, { headers, ...context }) => {
     }
 })
 
+const logoutLink = onError(({ networkError }) => {
+    if (networkError.statusCode === 401) auth.resetCredentials();
+})
+
 export const client = new ApolloClient({
-    link: authLink.concat(httpLink),
+    link: ApolloLink.from([logoutLink, authLink, httpLink]),
     cache: new InMemoryCache(),
 })

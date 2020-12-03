@@ -7,7 +7,7 @@ const baseURL = config.apiURL
 const createApiClient = () => {
     const instance = axios.create({
         baseURL: baseURL,
-        responseType: 'json',
+        responseType: 'json'
     })
     return instance
 }
@@ -23,10 +23,22 @@ apiClient.interceptors.request.use(config => {
     return config
 })
 
+apiClient.interceptors.response.use(
+    response => {
+        return response
+    },
+    error => {
+        if (error.request?.status === 401) {
+            auth.resetCredentials()
+        }
+        throw error
+    }
+)
+
 const login = async ({ username, password }) => {
     const { data } = await rawApiClient.post('/session', {
         username,
-        password,
+        password
     })
     return data
 }
@@ -39,7 +51,7 @@ const logout = async () => {
 const signup = async ({ username, password }) => {
     const { data } = await rawApiClient.post('/users/new', {
         username,
-        password,
+        password
     })
     return data
 }

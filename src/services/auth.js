@@ -41,13 +41,19 @@ class AuthService {
                 console.log('logout session with error:', err)
             })
         }
-        this.setAndStoreCredentials(null)
+        this.resetCredentials()
         await client.clearStore()
         await client.cache.reset()
     }
 
     isAuthenticated() {
         return !!this._credentials
+    }
+
+    resetCredentials() {
+        this._credentials = null
+        sessionStorage.removeItem(credentialsKey)
+        localStorage.removeItem(credentialsKey)
     }
 
     setAndStoreCredentials(credentials, remember) {
