@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="65bcdad6-e9b4-43ef-83a7-37c2e3b84986" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/spa-notes-app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/react-notes-app.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/api.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/auth.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/state/remote/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/state/remote/index.js" afterDir="false" />
-    </list>
+    <list default="true" id="65bcdad6-e9b4-43ef-83a7-37c2e3b84986" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,7 +26,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.JavaScript" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -46,17 +37,45 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1606990616691</updated>
-      <workItem from="1606990617917" duration="1592000" />
+      <workItem from="1606990617917" duration="1829000" />
     </task>
+    <task id="LOCAL-00001" summary="reset credential when hit on 401 unauthorized">
+      <created>1606992312549</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1606992312549</updated>
+    </task>
+    <task id="LOCAL-00002" summary="workspace idea style">
+      <created>1606992399075</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1606992399075</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="reset credential when hit on 401 unauthorized" />
+    <MESSAGE value="workspace idea style" />
+    <option name="LAST_COMMIT_MESSAGE" value="workspace idea style" />
+  </component>
   <component name="WindowStateProjectService">
-    <state x="368" y="223" width="1016" height="742" key="SettingsEditor" timestamp="1606991246347">
+    <state x="524" y="97" width="916" height="916" key="CommitChangelistDialog2" timestamp="1606992399031">
       <screen x="48" y="27" width="1872" height="1053" />
     </state>
-    <state x="368" y="223" width="1016" height="742" key="SettingsEditor/48.27.1872.1053@48.27.1872.1053" timestamp="1606991246347" />
+    <state x="524" y="97" width="916" height="916" key="CommitChangelistDialog2/48.27.1872.1053@48.27.1872.1053" timestamp="1606992399031" />
+    <state x="368" y="208" width="1016" height="742" key="SettingsEditor" timestamp="1606992446438">
+      <screen x="48" y="27" width="1872" height="1053" />
+    </state>
+    <state x="368" y="208" width="1016" height="742" key="SettingsEditor/48.27.1872.1053@48.27.1872.1053" timestamp="1606992446438" />
+    <state x="582" y="290" width="800" height="540" key="Vcs.Push.Dialog.v2" timestamp="1606992317166">
+      <screen x="48" y="27" width="1872" height="1053" />
+    </state>
+    <state x="582" y="290" width="800" height="540" key="Vcs.Push.Dialog.v2/48.27.1872.1053@48.27.1872.1053" timestamp="1606992317166" />
   </component>
 </project>
