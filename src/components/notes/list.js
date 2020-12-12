@@ -1,10 +1,11 @@
-import { makeStyles, Typography } from '@material-ui/core'
+import {makeStyles, Typography} from '@material-ui/core'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
-import React from 'react'
+import React, {useEffect} from 'react'
 import TodosListView from '../todos/list-view'
 import TodosAddView from '../todos/add-view'
-import { gql, useMutation, useQuery } from '@apollo/client'
+import {gql, useMutation, useQuery} from '@apollo/client'
+import produce from 'immer'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -36,6 +37,21 @@ query GetNotes {
     }
   }
 }
+`
+
+const OnNoteAdded = gql`
+  subscription OnNoteAdded {
+    noteAdded {
+      id
+      name
+      todos {
+        id
+        name
+        done
+        noteId
+      }
+    }
+  }
 `
 
 const TOGGLE_TODO = gql`
@@ -70,14 +86,32 @@ mutation AddTodo($input: AddTodoInput!){
 
 export default function NotesList() {
     const classes = useStyles()
-    const { loading, error, data } = useQuery(GET_NOTES)
+    const {loading, error, data, subscribeToMore} = useQuery(GET_NOTES)
+
+    useEffect(() => {
+        subscribeToMore({
+            document: OnNoteAdded,
+            updateQuery: (prev, {subscriptionData}) => {
+                if (subscriptionData.data) {
+                    const {noteAdded} = subscriptionData.data
+                    if (prev.notes.findIndex(note => note.id === noteAdded.id) === -1) {
+                        return produce(prev, draft => {
+                            draft.notes = [...draft.notes, noteAdded]
+                        })
+                    }
+                }
+                return prev
+            },
+        })
+    }, [subscribeToMore])
+
     const [toggleTodo] = useMutation(TOGGLE_TODO)
     const [addTodo] = useMutation(ADD_TODO, {
-        update(cache, { data: { addTodo } }) {
+        update(cache, {data: {addTodo}}) {
             cache.modify({
                 id: `Note:${addTodo.noteId}`,
                 fields: {
-                    todos(existingTodoRefs = [], { toReference }) {
+                    todos(existingTodoRefs = [], {toReference}) {
                         return [...existingTodoRefs, toReference(addTodo)]
                     },
                 },
@@ -86,8 +120,8 @@ export default function NotesList() {
     })
 
     const [deleteTodo] = useMutation(DELETE_TODO, {
-        update(cache, { data: { deleteTodo } }) {
-            cache.evict({ id: `Todo:${deleteTodo.id}` })
+        update(cache, {data: {deleteTodo}}) {
+            cache.evict({id: `Todo:${deleteTodo.id}`})
         },
     })
 
@@ -123,15 +157,15 @@ export default function NotesList() {
                                                    noteId: note.id,
                                                },
                                            },
-                                       })} />
-                        <TodosAddView addTodo={({ name }) => addTodo({
+                                       })}/>
+                        <TodosAddView addTodo={({name}) => addTodo({
                             variables: {
                                 input: {
                                     name: name,
                                     noteId: note.id,
                                 },
                             },
-                        })} />
+                        })}/>
                     </Paper>
                 </Grid>
             ))}

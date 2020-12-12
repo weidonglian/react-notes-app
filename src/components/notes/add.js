@@ -28,18 +28,9 @@ mutation AddNote($input: AddNoteInput!) {
 export default function NotesAdd() {
     const [open, setOpen] = useState(false)
     const [name, setName] = useState('')
-    const [addNote] = useMutation(ADD_NOTE, {
-        update(cache, { data: { addNote } }) {
-            cache.modify({
-                fields: {
-                    notes(existingNotes = [], { toReference }) {
-                        return [...existingNotes, toReference(addNote)]
-                    },
-                },
-            })
-        },
-    })
     const classes = useStyles()
+
+    const [addNote] = useMutation(ADD_NOTE)
 
     const handleClose = () => {
         setOpen(false)
