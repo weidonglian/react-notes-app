@@ -5,6 +5,12 @@ import auth from '../../services/auth'
 import {onError} from '@apollo/client/link/error'
 import {WebSocketLink} from '@apollo/client/link/ws'
 import {getMainDefinition} from '@apollo/client/utilities'
+import {SubscriptionClient} from 'subscriptions-transport-ws'
+
+const withAuthHeaders = (headers) => {
+    const token = auth?.accessToken
+    return token ? {...headers, Authorization: `Bearer ${token}`} : headers
+}
 
 const baseURL = config.apiURL
 const baseWsURL = config.wsURL
@@ -13,12 +19,14 @@ const httpLink = createHttpLink({
     uri: `${baseURL}/graphql`,
 })
 
-const wsLink = new WebSocketLink({
-    uri: `${baseWsURL}/graphql`,
-    options: {
-        reconnect: true,
-    },
+const subscriptionClient = new SubscriptionClient(`${baseWsURL}/graphql`, {
+    reconnect: true,
+    timeout: 30000,
+    lazy: true,
+    connectionParams: () => withAuthHeaders({})
 })
+
+const wsLink = new WebSocketLink(subscriptionClient)
 
 const splitLink = split(
     ({query}) => {
@@ -32,13 +40,10 @@ const splitLink = split(
     httpLink,
 )
 
+
 const authLink = setContext((_, {headers, ...context}) => {
-    const token = auth.credentials?.access_token
     return {
-        headers: {
-            ...headers,
-            ...(token ? {Authorization: `Bearer ${token}`} : {}),
-        },
+        headers: withAuthHeaders(headers),
         ...context,
     }
 })

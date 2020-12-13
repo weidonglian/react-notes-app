@@ -130,7 +130,7 @@ export default function NotesList() {
     }
 
     if (error) {
-        return <span>{`Error: ${error}`}</span>
+        return <span>{`NoteList Error: ${error}`}</span>
     }
 
     return (

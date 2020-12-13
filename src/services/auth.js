@@ -13,16 +13,25 @@ class AuthService {
         // load from storage if available
         const savedCredentials = sessionStorage.getItem(credentialsKey) || localStorage.getItem(credentialsKey)
         if (savedCredentials) {
-            this._credentials = JSON.parse(savedCredentials)
+            try {
+                this._credentials = JSON.parse(savedCredentials)
+            } catch (e) {
+                console.log("failed to parse credential: ", e)
+                this._credentials = null
+            }
         }
     }
 
     get username() {
-        return this._credentials ? this._credentials.username : null
+        return this._credentials?.username
     }
 
     get credentials() {
         return this._credentials
+    }
+
+    get accessToken() {
+        return this._credentials?.access_token
     }
 
     async login(user) {
@@ -33,6 +42,7 @@ class AuthService {
             refresh_token: token,
         }, user.remember)
         await client.resetStore()
+        await client.cache.reset()
     }
 
     async logout() {
